@@ -1,13 +1,3 @@
-@grey: #454545;
-@white: #f2f2f2;
-@green: #83b350;
-@textG: #b3b3b3;
-@black: #1a1a1a;
-@lineG: #cccccc;
-@darkGreen: #414d43;
-
-// Custom Navbar 
-
 .navbar-custom {
   background-color: #454545;
   border-color: #343434;
@@ -106,18 +96,12 @@
 .navbar-custom .navbar-link:hover {
   color: #c0c0c0;
 }
-
 .navbar-header {
-    float: left;
-    padding: 15px;
-    text-align: center;
-    width: 100%;
+  float: left;
+  padding: 15px;
+  text-align: center;
+  width: 100%;
 }
-.navbar-brand {float:none;}
-
-// end custom navbar
-
-
-
-
-
+.navbar-brand {
+  float: none;
+}
