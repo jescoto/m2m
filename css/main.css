@@ -1,3 +1,20 @@
+html {
+  background: url('../img/bk-lg.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+body {
+  background: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 .navbar-custom {
   background-color: #454545;
   border-color: #343434;
@@ -104,4 +121,27 @@
 }
 .navbar-brand {
   float: none;
+}
+.nav-menu {
+  font-size: 18px;
+  color: #f2f2f2;
+}
+.bus-box {
+  background-color: rgba(131, 179, 80, 0.75);
+  height: 73px;
+  border-radius: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #f2f2f2;
+  padding: 0px;
+  text-shadow: 0px 3px 0px rgba(0, 0, 0, 0.4);
+}
+.bus-time {
+  font-size: 20px;
+  text-align: center;
+  width: 20%;
+}
+.bus-box-left p {
+  width: 100px;
+  padding-bottom: 0px;
 }
