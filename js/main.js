@@ -1,3 +1,4 @@
+var host = "http://173.224.125.206:8803/"
 var linesAPI = 'http://173.224.125.206:8803/OperadorServiceRest/linhas';
 var line_Data = [];
 var way_val, stop_val = 0;
@@ -18,7 +19,7 @@ function getLines(){
 }; 
 
 function getWay(way_val) {
-	var wayAPI = "http://173.224.125.206:8803/OperadorServiceRest/sentidos/" + way_val;
+	var wayAPI = host + "OperadorServiceRest/sentidos/" + way_val;
 
 	$.getJSON(wayAPI, function(json) {
 	var ways = json.sentidos;
@@ -36,8 +37,8 @@ function getWay(way_val) {
 };
 
 function getStop(stop_val) {
-	var stopAPI = "http://173.224.125.206:8803/OperadorServiceRest/pontos/" + stop_val;
-
+	var stopAPI = host+ "OperadorServiceRest/pontos/" + stop_val;
+	console.log(stopAPI);
 	$.getJSON(stopAPI, function(json) {
 	var stop = json.pontos;
 	$.each(stop, function(index, value) {
@@ -46,12 +47,25 @@ function getStop(stop_val) {
 		var stop_tipo = stop[index].tipo;
 		var stop_lat = stop[index].latitude;
 		var stop_long = stop[index].longitude;
+		var stop_fac = stop[index].patternFraction;
 		
 		$('#lines-stop').append($('<option>')
 			.text(stop_name)
 			.attr('value', stop_id)
+			.attr('pat', stop_fac)
 		);
+
 	});
+	});
+};
+
+
+
+function update() {
+	var stop_sel = $("#lines-stop option:selected").val();
+	var stop_sel_API = "http://173.224.125.206:8803/OperadorServiceRest/sentido/" + stop_sel +"/tamanho";
+	$.getJSON(stop_sel_API, function(json) {
+	console.log(json);
 	});
 };
 
@@ -80,6 +94,7 @@ $("#lines-way").change(function() {
 	 };
 });
 
+
 $("#lines-stop").change(function() {
 	$("#run-btn").removeAttr('disabled');
 });
@@ -90,4 +105,5 @@ $("#load-sel").click(function() {
 
 $("#run-btn").click(function() {
 	$("#lineModal").modal("hide");
+	update();
 });
