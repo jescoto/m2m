@@ -2,8 +2,8 @@ var host = "http://173.224.125.206:8803/"
 var linesAPI = 'http://173.224.125.206:8803/OperadorServiceRest/linhas';
 var line_Data = [];
 var way_val, stop_val = 0;
-var meters;
-var timing;
+var meters = 0;
+var timing = 0;
 
 
 function getLines(){
@@ -75,18 +75,41 @@ function update() {
 	var stop_time_API = host + "OperadorServiceRest/sentido/" + line_sel + "/" + way_sel + "/tempomedio";
 	$.getJSON(stop_sel_API, function(json) {
 	meters = json.int
+	console.log("meters: " + meters);
 });
 	$.getJSON(stop_time_API, function(json) {
 	timing = json.double;
-	test_nan = isNAN(timing);
-	test_float = pars
-	console.log("timing is a " + timing + " and is " + test_nan);
+	console.log("timing: " + timing);
 	});
 
-	var time_to_busStop = (stop_pat*timing)/60;
-	console.log(stop_pat + ": Stop pat " + timing + ": timing");
+	calTime(timing, stop_pat);
+	calDis(meters, stop_pat);
+	getBuses(way_sel, line_sel, stop_pat);
 };
 
+function getBuses(line, dir, pat) {
+	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + line + "/" + dir;
+	$.getJSON(getBus_API, function(json) {
+		var bus = json.veiculos;
+		console.log(bus);
+	$.each(bus, function(index, value) {
+		var bus_pat = bus[index].patternFraction;
+		var bus_id = bus[index].id;
+		if (bus_pat < pat) {
+			console.log("Yes");
+		}
+		
+		});
+	});
+}
+
+function calTime(value1, value2) {
+	var time_to_busStop = (value1*value2)/60.0;
+};
+
+function calDis(value1, value2) {
+	var dis_to_busStop = (value1*value2)/1000.0;
+}
 
 $("#lines-sel").change(function() {
 	var way_val = $("#lines-sel option:selected").val();
