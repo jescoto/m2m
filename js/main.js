@@ -2,10 +2,14 @@ var host = "http://173.224.125.206:8803/"
 var linesAPI = 'http://173.224.125.206:8803/OperadorServiceRest/linhas';
 var line_Data = [];
 var way_val, stop_val = 0;
+var meters;
+var timing;
+
 
 function getLines(){
 	$.getJSON(linesAPI, function(json) {
 	var lines = json.linhas;
+	console.log(linesAPI);
 	$.each(lines, function(index, value) {
 		var line_name = lines[index].nome;
 		var line_id = lines[index].id;
@@ -23,6 +27,7 @@ function getWay(way_val) {
 
 	$.getJSON(wayAPI, function(json) {
 	var ways = json.sentidos;
+	console.log(wayAPI);
 	$.each(ways, function(index, value) {
 		var ways_name = ways[index].nome;
 		var ways_id = ways[index].id;
@@ -34,6 +39,7 @@ function getWay(way_val) {
 		);
 	});
 	});
+	return way_val;
 };
 
 function getStop(stop_val) {
@@ -62,11 +68,23 @@ function getStop(stop_val) {
 
 
 function update() {
-	var stop_sel = $("#lines-stop option:selected").val();
-	var stop_sel_API = "http://173.224.125.206:8803/OperadorServiceRest/sentido/" + stop_sel +"/tamanho";
+	var way_sel = $("#lines-way option:selected").val();
+	var line_sel = $("#lines-sel option:selected").val();
+	var stop_pat = $("#lines-stop option:selected").attr('pat');
+	var stop_sel_API = host + "OperadorServiceRest/sentido/" + way_sel +"/tamanho";
+	var stop_time_API = host + "OperadorServiceRest/sentido/" + line_sel + "/" + way_sel + "/tempomedio";
 	$.getJSON(stop_sel_API, function(json) {
-	console.log(json);
+	meters = json.int
+});
+	$.getJSON(stop_time_API, function(json) {
+	timing = json.double;
+	test_nan = isNAN(timing);
+	test_float = pars
+	console.log("timing is a " + timing + " and is " + test_nan);
 	});
+
+	var time_to_busStop = (stop_pat*timing)/60;
+	console.log(stop_pat + ": Stop pat " + timing + ": timing");
 };
 
 
@@ -80,6 +98,7 @@ $("#lines-sel").change(function() {
 	 } else {
 	 	console.log("Select not active");
 	 };
+	 return way_val;
 });
 
 $("#lines-way").change(function() {
@@ -92,6 +111,7 @@ $("#lines-way").change(function() {
 	 } else {
 	 	console.log("Select not active");
 	 };
+	 return stop_val;
 });
 
 
