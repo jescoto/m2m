@@ -82,33 +82,38 @@ function update() {
 	console.log("timing: " + timing);
 	});
 
-	calTime(timing, stop_pat);
-	calDis(meters, stop_pat);
-	getBuses(way_sel, line_sel, stop_pat);
+	caltime = calTime(timing, stop_pat);
+	caldist = calDis(meters, stop_pat);
+	getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
 };
 
-function getBuses(line, dir, pat) {
+function getBuses(line, dir, pat, caltime, caldist) {
 	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + line + "/" + dir;
 	$.getJSON(getBus_API, function(json) {
 		var bus = json.veiculos;
-		console.log(bus);
 	$.each(bus, function(index, value) {
 		var bus_pat = bus[index].patternFraction;
 		var bus_id = bus[index].id;
+		var bus_code = bus[index].codigo;
+		console.log(caltime);
 		if (bus_pat < pat) {
-			console.log("Yes");
+			var time2next = (caltime - ((bus_pat*caltime)/60.0));
+			var time = Math.abs(time2next);
+			console.log(time);
+			$("#bus-list").append('<div class="bus-box"><div class="bus-time"><div class="bus-box-left pull-left"><p>10 mins</p><img src="../img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="../img/loc.png" width="10px" height="auto"><span>Current Location</span></div></div></div>');	
 		}
-		
 		});
 	});
 }
 
 function calTime(value1, value2) {
 	var time_to_busStop = (value1*value2)/60.0;
+	return time_to_busStop;
 };
 
 function calDis(value1, value2) {
 	var dis_to_busStop = (value1*value2)/1000.0;
+	return dis_to_busStop;
 }
 
 $("#lines-sel").change(function() {
