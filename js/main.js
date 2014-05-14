@@ -73,34 +73,51 @@ function update() {
 	var stop_pat = $("#lines-stop option:selected").attr('pat');
 	var stop_sel_API = host + "OperadorServiceRest/sentido/" + way_sel +"/tamanho";
 	var stop_time_API = host + "OperadorServiceRest/sentido/" + line_sel + "/" + way_sel + "/tempomedio";
+
 	$.getJSON(stop_sel_API, function(json) {
-	meters = json.int
-	console.log("meters: " + meters);
-});
-	$.getJSON(stop_time_API, function(json) {
-	timing = json.double;
-	console.log("timing: " + timing);
+		meters = json.int
+		console.log("meters: " + meters);
+		caldist = calDis(meters, stop_pat);
+	
+	
+		$.getJSON(stop_time_API, function(json) {
+			timing = json.double;
+			console.log("timing: " + timing);
+			caltime = calTime(timing, stop_pat);
+
+			getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
+		});
+
 	});
 
-	caltime = calTime(timing, stop_pat);
-	caldist = calDis(meters, stop_pat);
-	getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
+//	caltime = calTime(timing, stop_pat);
+//	caldist = calDis(meters, stop_pat);
+//	getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
 };
 
 function getBuses(line, dir, pat, caltime, caldist) {
 	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + line + "/" + dir;
 	$.getJSON(getBus_API, function(json) {
-		var bus = json.veiculos;
+		var bus = json.veiculos.reverse();
+		console.log(bus)
 	$.each(bus, function(index, value) {
 		var bus_pat = bus[index].patternFraction;
 		var bus_id = bus[index].id;
 		var bus_code = bus[index].codigo;
 		console.log(caltime);
 		if (bus_pat < pat) {
-			var time2next = (caltime - ((bus_pat*caltime)/60.0));
-			var time = Math.abs(time2next);
+			var time2next = (caltime - ((bus_pat*timing)/60.0));
+			var time = Math.abs(time2next) >>> 0;
+			if (time == 0) {
+				time = "Now";
+			} else if (time == 1) {
+				time = time + " min";
+
+			} else {
+				time = time + " mins";
+			}
 			console.log(time);
-			$("#bus-list").append('<div class="bus-box"><div class="bus-time"><div class="bus-box-left pull-left"><p>10 mins</p><img src="../img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="../img/loc.png" width="10px" height="auto"><span>Current Location</span></div></div></div>');	
+			$("#bus-list").append('<div class="bus-box"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto"><span>Current Location</span></div></div></div>');	
 		}
 		});
 	});
