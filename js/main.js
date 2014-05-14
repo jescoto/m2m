@@ -2,10 +2,14 @@ var host = "http://173.224.125.206:8803/"
 var linesAPI = 'http://173.224.125.206:8803/OperadorServiceRest/linhas';
 var line_Data = [];
 var way_val, stop_val = 0;
+var meters = 0;
+var timing = 0;
+
 
 function getLines(){
 	$.getJSON(linesAPI, function(json) {
 	var lines = json.linhas;
+	console.log(linesAPI);
 	$.each(lines, function(index, value) {
 		var line_name = lines[index].nome;
 		var line_id = lines[index].id;
@@ -23,6 +27,7 @@ function getWay(way_val) {
 
 	$.getJSON(wayAPI, function(json) {
 	var ways = json.sentidos;
+	console.log(wayAPI);
 	$.each(ways, function(index, value) {
 		var ways_name = ways[index].nome;
 		var ways_id = ways[index].id;
@@ -34,6 +39,7 @@ function getWay(way_val) {
 		);
 	});
 	});
+	return way_val;
 };
 
 function getStop(stop_val) {
@@ -62,14 +68,53 @@ function getStop(stop_val) {
 
 
 function update() {
-	var stop_sel = $("#lines-way option:selected").val();
+	var way_sel = $("#lines-way option:selected").val();
+	var line_sel = $("#lines-sel option:selected").val();
 	var stop_pat = $("#lines-stop option:selected").attr('pat');
-	var stop_sel_API = "http://173.224.125.206:8803/OperadorServiceRest/sentido/" + stop_sel +"/tamanho";
+	var stop_sel_API = host + "OperadorServiceRest/sentido/" + way_sel +"/tamanho";
+	var stop_time_API = host + "OperadorServiceRest/sentido/" + line_sel + "/" + way_sel + "/tempomedio";
 	$.getJSON(stop_sel_API, function(json) {
-	console.log(stop_pat);
+	meters = json.int
+	console.log("meters: " + meters);
+});
+	$.getJSON(stop_time_API, function(json) {
+	timing = json.double;
+	console.log("timing: " + timing);
 	});
+
+	caltime = calTime(timing, stop_pat);
+	caldist = calDis(meters, stop_pat);
+	getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
 };
 
+function getBuses(line, dir, pat, caltime, caldist) {
+	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + line + "/" + dir;
+	$.getJSON(getBus_API, function(json) {
+		var bus = json.veiculos;
+	$.each(bus, function(index, value) {
+		var bus_pat = bus[index].patternFraction;
+		var bus_id = bus[index].id;
+		var bus_code = bus[index].codigo;
+		console.log(caltime);
+		if (bus_pat < pat) {
+			var time2next = (caltime - ((bus_pat*caltime)/60.0));
+			var time = Math.abs(time2next);
+			console.log(time);
+			$("#bus-list").append('<div class="bus-box"><div class="bus-time"><div class="bus-box-left pull-left"><p>10 mins</p><img src="../img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="../img/loc.png" width="10px" height="auto"><span>Current Location</span></div></div></div>');	
+		}
+		});
+	});
+}
+
+function calTime(value1, value2) {
+	var time_to_busStop = (value1*value2)/60.0;
+	return time_to_busStop;
+};
+
+function calDis(value1, value2) {
+	var dis_to_busStop = (value1*value2)/1000.0;
+	return dis_to_busStop;
+}
 
 $("#lines-sel").change(function() {
 	var way_val = $("#lines-sel option:selected").val();
@@ -81,6 +126,7 @@ $("#lines-sel").change(function() {
 	 } else {
 	 	console.log("Select not active");
 	 };
+	 return way_val;
 });
 
 $("#lines-way").change(function() {
@@ -93,6 +139,7 @@ $("#lines-way").change(function() {
 	 } else {
 	 	console.log("Select not active");
 	 };
+	 return stop_val;
 });
 
 
