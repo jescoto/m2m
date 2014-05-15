@@ -158,6 +158,11 @@ padding: 0;
   white-space: nowrap;
 }
 
+.bus-box a {
+  text-decoration: none;
+  color: white;
+}
+
 .bus-time {
   font-size: 20px;
   text-align: center;
@@ -185,12 +190,11 @@ padding: 0;
 }
 
 #bus-map {
-  height: 50%;
+  height: 100%;
   width: 100%;
   min-height: 300px;
   background-color: white;
   float: left;
-  border-radius: 0px 0px 3px 3px;
 }
 
 .vehicle-title {
@@ -202,3 +206,13 @@ padding: 0;
   margin-left: 6px;
 }
 
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.address {
+  display: inline-block;
+}

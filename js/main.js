@@ -4,6 +4,7 @@ var line_Data = [];
 var way_val, stop_val = 0;
 var meters = 0;
 var timing = 0;
+var updateTimes;
 
 
 function getLines(){
@@ -68,6 +69,9 @@ function getStop(stop_val) {
 
 
 function update() {
+	
+	clearInterval(updateTimes);	
+
 	var way_sel = $("#lines-way option:selected").val();
 	var line_sel = $("#lines-sel option:selected").val();
 	var stop_pat = $("#lines-stop option:selected").attr('pat');
@@ -84,8 +88,11 @@ function update() {
 			timing = json.double;
 			console.log("timing: " + timing);
 			caltime = calTime(timing, stop_pat);
-
+			
 			getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
+			updateTimes = setInterval(function(){
+					getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
+				}, 20000);
 		});
 
 	});
@@ -96,31 +103,38 @@ function update() {
 };
 
 function getBuses(line, dir, pat, caltime, caldist) {
-	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + line + "/" + dir;
-	$.getJSON(getBus_API, function(json) {
-		var bus = json.veiculos.reverse();
-		console.log(bus)
-	$.each(bus, function(index, value) {
-		var bus_pat = bus[index].patternFraction;
-		var bus_id = bus[index].id;
-		var bus_code = bus[index].codigo;
-		console.log(caltime);
-		if (bus_pat < pat) {
-			var time2next = (caltime - ((bus_pat*timing)/60.0));
-			var time = Math.abs(time2next) >>> 0;
-			if (time == 0) {
-				time = "Now";
-			} else if (time == 1) {
-				time = time + " min";
+ var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + line + "/" + dir;
+ $.getJSON(getBus_API, function(json) {
+  var bus = json.veiculos.reverse();
+  console.log(bus);
+ $("#bus-list").empty();
+ $.each(bus, function(index, value) {
+  var bus_pat = bus[index].patternFraction;
+  var bus_id = bus[index].id;
+  var bus_code = bus[index].codigo;
+  var bus_lat = bus[index].latitude;
+  var bus_lng = bus[index].longitude;
 
-			} else {
-				time = time + " mins";
-			}
-			console.log(time);
-			$("#bus-list").append('<div class="bus-box"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto"><span>Current Location</span></div></div></div>');	
-		}
-		});
-	});
+  console.log(caltime);
+  if (bus_pat < pat) {
+   var time2next = (caltime - ((bus_pat*timing)/60.0));
+   var time = Math.abs(time2next) >>> 0;
+   console.log(time);
+   if (time == 0) {
+   		time = "Now";
+   } else if (time == 1) {
+   		time = time + " min"
+   } else {
+   		time = time + " mins"
+   }
+
+   var appended = $('<div class="bus-box"><a href="map.html"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto"><span>Current Location</span></div></div></a></div>');
+
+   $("#bus-list").append(appended);
+   appended.geocoder(bus_lat, bus_lng); 
+  }
+  });
+ });
 }
 
 function calTime(value1, value2) {
