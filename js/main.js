@@ -196,8 +196,6 @@ $("body").click(function(e) {
 	}
 });
 
-$("side-nav").click(function() {
-	$.sidr("close", "sidr");
-});
+
 
 
