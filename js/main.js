@@ -128,7 +128,7 @@ function getBuses(line, dir, pat, caltime, caldist) {
    		time = time + " mins"
    }
 
-   var appended = $('<div class="bus-box"><a href="map.html"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto"><span>Current Location</span></div></div></a></div>');
+   var appended = $('<div class="bus-box"><a href="map.html"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto" class="topminus5"><span class="geo">Current Location</span></div></div></a></div>');
 
    $("#bus-list").append(appended);
    appended.geocoder(bus_lat, bus_lng); 
