@@ -186,3 +186,18 @@ $("#run-btn").click(function() {
 	$("#lineModal").modal("hide");
 	update();
 });
+
+// side menu
+$("body").click(function(e) {
+	if(e.target != sidr) {
+	$.sidr("close");
+	} else {
+		console.log("not target");
+	}
+});
+
+$("side-nav").click(function() {
+	$.sidr("close", "sidr");
+});
+
+

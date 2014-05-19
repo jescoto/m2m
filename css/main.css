@@ -124,6 +124,9 @@ body {
 .topminus5 {
   margin-top: -10px;
 }
+.left20 {
+  margin-left: 20px;
+}
 .nav-menu {
   font-size: 18px;
   color: #f2f2f2;
@@ -194,4 +197,16 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.nav-side {
+  background-color: none;
+  color: #f2f2f2;
+}
+.nav-text {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.nav-text a {
+  color: #f2f2f2;
+  text-decoration: none;
 }

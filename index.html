@@ -11,6 +11,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
     <link href="css/main.css" rel="stylesheet">
     <link href="css/font-awesome.css" rel="stylesheet">
+    <link href="css/jquery.sidr.dark.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -65,7 +66,7 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <div class="navbar-left nav-menu pull-left">
-            <i class="fa fa-bars"></i>
+            <a class="navbar-link" id="side-nav" href="#sidr"><i class="fa fa-bars"></i></a>
           </div>
           <a class="navbar-brand" href="#"><img src="../img/logo.png" width="120px"></a>
           <div class="navbar-right nav-menu pull-right">
@@ -77,7 +78,16 @@
   </div><!-- /.container-fluid -->
   
 </nav>
-<div class="row">
+<div id="sidr" class="nav-side">
+  <p>Menu</p>
+  <ul class="nav-text">
+    <li><span>Section 1</span></li>
+    <li><span>Section 2</span></li>
+    <li><span>Section 3</span></li>
+    <li><span>Section 4</span></li>
+  </ul>
+</div>
+<div class="row" id="content">
   <div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3" id="bus-list">
 <!-- 
 <div class="bus-box">
@@ -111,7 +121,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.sidr.min.js"></script>
     <script src="js/geocoder.js"></script>
     <script src="js/main.js"></script>
+    <script>
+$(document).ready(function() {
+  $('#side-nav').sidr();
+});
+</script>
   </body>
 </html>
