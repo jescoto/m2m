@@ -121,6 +121,12 @@ body {
 .navbar-brand {
   float: none;
 }
+.topminus5 {
+  margin-top: -10px;
+}
+.left20 {
+  margin-left: 20px;
+}
 .nav-menu {
   font-size: 18px;
   color: #f2f2f2;
@@ -138,6 +144,10 @@ body {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   white-space: nowrap;
+}
+.bus-box a {
+  text-decoration: none;
+  color: white;
 }
 .bus-time {
   font-size: 20px;
@@ -162,12 +172,11 @@ body {
   padding-right: 0px;
 }
 #bus-map {
-  height: 50%;
+  height: 100%;
   width: 100%;
   min-height: 300px;
   background-color: white;
   float: left;
-  border-radius: 0px 0px 3px 3px;
 }
 .vehicle-title {
   font-size: 28px;
@@ -175,4 +184,29 @@ body {
 }
 .bus-line span {
   margin-left: 6px;
+}
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.geo {
+  width: 250px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav-side {
+  background-color: none;
+  color: #f2f2f2;
+}
+.nav-text {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.nav-text a {
+  color: #f2f2f2;
+  text-decoration: none;
 }
