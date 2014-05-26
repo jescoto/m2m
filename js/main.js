@@ -148,7 +148,7 @@ function calDis(value1, value2) {
 function maptheBus(lat, lng) {
 	var busCord = new google.maps.LatLng(lat,lng);
 	var mapOptions = {
-		zoom: 6,
+		zoom: 17,
 		center: busCord,
 		mapTypeId: google.maps.MapTypeId.Roadmap
 	};
@@ -213,6 +213,13 @@ $("body").click(function(e) {
 $('body').on('click','.bus-box', function(e) {
 	var sel_bus_lat = $(this).attr("lat");
 	var sel_bus_lng	= $(this).attr("lng");
+	$("#bus-map").empty();
 	maptheBus(sel_bus_lat, sel_bus_lng);
 	console.log(sel_bus_lat);
 	});
+
+$('#more').click(function() {
+	$('#frame').toggleClass("hidden");
+});
+
+
