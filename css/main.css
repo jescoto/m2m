@@ -190,11 +190,13 @@ body {
   text-overflow: ellipsis;
 }
 .geo {
+	/*
   width: 250px;
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+	*/
 }
 .nav-side {
   background-color: none;
