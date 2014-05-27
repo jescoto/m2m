@@ -182,9 +182,9 @@ function buildList(data){
 				} else {
 					time = time + " mins";
 				}
-<<<<<<< HEAD
+
 			var appended = $('<div class="bus-box" data-toggle="modal" data-target="#mapModal" lat=' + '"' + bus_lat + '"' + " " +'lng=' + '"' + bus_lng + '"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus@2x.png" height="35px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto" class="topminus5"><span class="geo">Current Location</span></div></div></div>');
-=======
+
 			var appended = $('<div class="bus-box" '/*data-toggle="modal" data-target="#mapModal" lat=' + '"' + bus_lat + '"' + " " +'lng=' + '"' + bus_lng + '*/+'>' +
 								'<div class="bus-time">' +
 									'<div class="bus-box-left pull-left">' +
@@ -200,7 +200,7 @@ function buildList(data){
 									'</div>' +
 								'</div>' +
 							'</div>');
->>>>>>> bd279f08a46522895c9f7380b32f67332aeed3f6
+
 			$("#bus-list").append(appended);
 			appended.geocoder(bus_lat, bus_lng);
 			
