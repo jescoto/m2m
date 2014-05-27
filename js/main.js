@@ -189,7 +189,7 @@ function buildList(data){
 								'<div class="bus-time">' +
 									'<div class="bus-box-left pull-left">' +
 										'<p>'+ time +'</p>' +
-										'<img src="img/bus.png" height="40px" width="auto">' +
+										'<img src="img/bus@2x.png" height="35px" width="auto">' +
 									'</div>' +
 								'</div>' +
 							'<div class="bus-right pull-left">' +
