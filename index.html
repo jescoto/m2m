@@ -13,7 +13,7 @@
     <link href="css/font-awesome.css" rel="stylesheet">
     <link href="css/jquery.sidr.dark.css" rel="stylesheet">
     <link href="css/elementTransitions.css" rel="stylesheet">
-
+	<link href="css/newRolles.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,6 +23,8 @@
     <![endif]-->
   </head>
   <script src="http://maps.google.com/maps/api/js?sensor=true&libraries=places"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	    
   <body>
     <!-- Modals -->
 
@@ -98,7 +100,6 @@
             </div>
             <div class="modal-body map-box">
               <div id="bus-map">
-                <i class="fa fa-exclamation-circle"></i> No bus selected. Select your line first from the top right menu.
               </div>
             </div>
             <div class="modal-footer">
@@ -116,7 +117,7 @@
           <div class="navbar-left nav-menu pull-left">
             <a class="navbar-link" id="side-nav" href="#sidr"><i class="fa fa-bars"></i></a>
           </div>
-          <a class="navbar-brand" href="#"><img src="../img/logo.png" width="120px"></a>
+          <a class="navbar-brand" href="#"><img src="img/logo.png" width="120px"></a>
           <div class="navbar-right nav-menu pull-right">
             <a class="navbar-link" id="load-sel" href="#" data-toggle="modal" data-target="#lineModal"><i class="fa fa-ellipsis-v"></i></a>
           </div>
@@ -132,56 +133,65 @@
   <p>Menu</p>
   <ul class="nav-text">
     <li><span>Section 1</span></li>
-    <li><span><a href="#" data-toggle="modal" data-target="#mapModal" id="busMap">Bus Map</a></span></li>
+    <li><span><a href="#" onclick="$('.transition-container').removeClass('page-show-map', 'page-show-shared').addClass('page-show-list')">Lista</a></span></li>
+    <li><span><a href="#" onclick="$('.transition-container').removeClass('page-show-list', 'page-show-shared').addClass('page-show-map')" id="busMap">Bus Map</a></span></li>
     <li><span><a href="#" data-toggle="modal" data-target="#emailModal">Contact Us</a></span></li>
-    <li><span><a href="#" id="more">More</a></span></li>
   </ul>
 </div>
-  <div class="row hidden" id="frame">
-    <div class="col-xs-12">
-      <iframe src="frame.html" style="border: 0; width: 100%; height: 100%;"></iframe>
-    </div>
-  </div>
-  <div class="row" id="content">
-    <div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3" id="bus-list">
 
-<!-- 
-<div class="bus-box">
-  <a href="map.html">
-    <div class="bus-time">
-      <div class="bus-box-left pull-left">
-        <p>time</p>
-        <img src="img/bus.png" height="40px" width="auto">
-      </div>
-    </div>
-    <div class="bus-right pull-left">
-      <div class="bus-line">
-        <p class="vehicle-title">bus code</p>
-        <img src="img/loc.png" width="10px" height="auto" class="topminus5">
-        <span class="geo">Current Location</span>
-      </div>
-    </div>
-  </a>
+
+<div class="row-in" id="content">
+	<div id="scroller">
+		<div class="transition-container">
+			<div class="page" id="container-list">			
+				<div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3" id="bus-list">
+					
+
+					
+				</div>
+			</div>
+			  
+			<div class="page">
+				<div  id="mapView">
+				</div>
+			</div>
+		</div>
+	</div>	
 </div>
--->
-  
-      
-  </div>
-  
-</div>
+
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+ 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/elementTransitions.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.sidr.min.js"></script>
+	<script src="js/store.js"></script>
+	<script src="js/map.js"></script>
     <script src="js/geocoder.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/elementTransitions.js"></script>
+	<script src="js/iscroll.js"></script>
+	<script src="js/markerwithlabel.js"></script>
     <script>
     $(document).ready(function() {
       $('#side-nav').sidr();
+		window.myScroll = new IScroll('#content', {
+			mouseWheel: true,
+			//scrollbars: true
+		});
+		
+		
+			
+		var pages = $('.page');
+		var totalPages = pages.length;
+		
+		pages.each(function(count){
+			transition.bind(this, count*100, 0 , 0)();
+		});
+		
+		$('#mapView').height(document.body.offsetHeight - 140);
+		
     });
     </script>
   </body>
