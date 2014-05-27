@@ -7,12 +7,35 @@ var timing = 0;
 var updateTimes;
 var buslist = [];
 var sel_bus_lat;
+var bus_store = new Store();
+var map;
+
+var configArrival = {
+	line_sel: null, 
+	way_sel: null, 
+	stop_pat: null, 
+	caltime: null, 
+	caldist: null,
+	linesObj_origin: null,
+	waysObj_origin: null,
+	stopsObj_origin: null,
+	lineObj: null,
+	wayObj: null,
+	stopObj: null
+};
+
+
+
 
 function getLines(){
 	$.getJSON(linesAPI, function(json) {
 	var lines = json.linhas;
 	console.log(linesAPI);
+	
+	configArrival.linesObj_origin = lines;
+	
 	$.each(lines, function(index, value) {
+		
 		var line_name = lines[index].nome;
 		var line_id = lines[index].id;
 		$('#lines-sel').append($('<option>')
@@ -30,6 +53,9 @@ function getWay(way_val) {
 	$.getJSON(wayAPI, function(json) {
 	var ways = json.sentidos;
 	console.log(wayAPI);
+	
+	configArrival.waysObj_origin = ways;
+	
 	$.each(ways, function(index, value) {
 		var ways_name = ways[index].nome;
 		var ways_id = ways[index].id;
@@ -49,6 +75,10 @@ function getStop(stop_val) {
 	console.log(stopAPI);
 	$.getJSON(stopAPI, function(json) {
 	var stop = json.pontos;
+	
+	configArrival.stopsObj_origin = stop;
+	
+	
 	$.each(stop, function(index, value) {
 		var stop_name = stop[index].nome;
 		var stop_id = stop[index].id;
@@ -86,10 +116,18 @@ function update() {
 			console.log("timing: " + timing);
 			caltime = calTime(timing, stop_pat);
 			
-			getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
+			
+			configArrival.line_sel = line_sel;
+			configArrival.way_sel = way_sel;
+			configArrival.stop_pat = stop_pat;
+			configArrival.caltime = caltime;
+			configArrival.caldist = caldist;
+			
+			
+			getBuses();
 			updateTimes = setInterval(function(){
-					getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
-				}, 20000);
+					getBuses();
+			}, 20000);
 		});
 
 	});
@@ -99,26 +137,42 @@ function update() {
 //	getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
 }
 
-function getBuses(line, dir, pat, caltime, caldist) {
-	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + line + "/" + dir;
+function getBuses() {
+	
+	var arrV = configArrival;
+	
+	
+	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + arrV.line_sel + "/" + arrV.way_sel;
 	$.getJSON(getBus_API, function(json) {
 		var bus = json.veiculos.reverse();
-		console.log(bus);
-		$("#bus-list").empty();
-	$.each(bus, function(index, value) {
-		var bus_pat = bus[index].patternFraction;
-		var bus_id = bus[index].id;
-		var bus_code = bus[index].codigo;
-		var bus_lat = bus[index].latitude;
-		var bus_lng = bus[index].longitude;
+		bus_store.update(bus);
+		
+		
+		//console.log(bus);
+		
+	});
+}
 
-		console.log(bus_lng);
-		if (bus_pat < pat) {
-			var time2next = (caltime - ((bus_pat*timing)/60.0));
+function buildList(data){
+	
+	var arrV = configArrival;
+	
+	
+	$("#bus-list").empty();
+	$.each(data, function(index, value) {
+		var bus_pat = data[index].patternFraction;
+		var bus_id = data[index].id;
+		var bus_code = data[index].codigo;
+		var bus_lat = data[index].latitude;
+		var bus_lng = data[index].longitude;
+
+		//console.log(bus_lng);
+		if (bus_pat < arrV.stop_pat) {
+			var time2next = (arrV.caltime - ((bus_pat*timing)/60.0));
 			var time = Math.abs(time2next) >>> 0;
 			var currentBus = [bus_lat,bus_lng];
 			buslist.push(currentBus);
-			console.log(buslist);
+			//console.log(buslist);
 				if (time === 0) {
 				time = "Now";
 				} else if (time == 1) {
@@ -129,11 +183,16 @@ function getBuses(line, dir, pat, caltime, caldist) {
 			var appended = $('<div class="bus-box" data-toggle="modal" data-target="#mapModal" lat=' + '"' + bus_lat + '"' + " " +'lng=' + '"' + bus_lng + '"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus.png" height="40px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto" class="topminus5"><span class="geo">Current Location</span></div></div></div>');
 			$("#bus-list").append(appended);
 			appended.geocoder(bus_lat, bus_lng);
+			
+			myScroll.refresh();
 		}
-	}
-	);
 	});
 }
+
+function buildMap(data){
+	map.updateVehicles(data);
+}
+
 
 function calTime(value1, value2) {
 	var time_to_busStop = (value1*value2)/60.0;
@@ -145,19 +204,28 @@ function calDis(value1, value2) {
 	return dis_to_busStop;
 }
 
-function maptheBus(lat, lng) {
-	var busCord = new google.maps.LatLng(lat,lng);
+function maptheBus() {
+	
 	var mapOptions = {
-		zoom: 17,
-		center: busCord,
 		mapTypeId: google.maps.MapTypeId.Roadmap
 	};
 
-	var map = new google.maps.Map(document.getElementById('bus-map'), mapOptions);
-	var marker = new google.maps.Marker({
-      position: busCord,
-      map: map
-  });
+	
+	map = new Map('#mapView', mapOptions);
+	//map = new Map('#bus-map', mapOptions);
+	map.addStopPoint(configArrival.stopObj);
+	
+}
+
+function transition(x, y, z){
+	this.style.webkitTransform = "translate3d("+x+"%, "+y+"px, "+z+"px)";
+}
+
+
+function findAt(record, name, val){
+	return record.filter(function(e){
+		return e[name] == val;
+	})
 }
 
 
@@ -168,9 +236,12 @@ $("#lines-sel").change(function() {
 		$("#lines-way option[value!= '0']").remove();
 		$("#lines-way").removeAttr('disabled');
 		getWay(way_val);
+		
+		configArrival.lineObj = findAt(configArrival.linesObj_origin, 'id', way_val)[0];
 	} else {
 		console.log("Select not active");
 	}
+	
 	return way_val;
 });
 
@@ -181,6 +252,8 @@ $("#lines-way").change(function() {
 		$("#lines-stop option[value!= '0']").remove();
 		$("#lines-stop").removeAttr('disabled');
 		getStop(stop);
+		
+		configArrival.wayObj = findAt(configArrival.waysObj_origin, 'id', stop)[0];
 	} else {
 		console.log("Select not active");
 	}
@@ -190,6 +263,8 @@ $("#lines-way").change(function() {
 
 $("#lines-stop").change(function() {
 	$("#run-btn").removeAttr('disabled');
+	
+	configArrival.stopObj = findAt(configArrival.stopsObj_origin, 'id',  $("#lines-stop option:selected").val())[0];
 });
 
 $("#load-sel").click(function() {
@@ -199,6 +274,7 @@ $("#load-sel").click(function() {
 $("#run-btn").click(function() {
 	$("#lineModal").modal("hide");
 	update();
+	maptheBus();
 });
 
 
@@ -213,13 +289,15 @@ $("body").click(function(e) {
 $('body').on('click','.bus-box', function(e) {
 	var sel_bus_lat = $(this).attr("lat");
 	var sel_bus_lng	= $(this).attr("lng");
-	$("#bus-map").empty();
 	maptheBus(sel_bus_lat, sel_bus_lng);
 	console.log(sel_bus_lat);
-	});
-
-$('#more').click(function() {
-	$('#frame').toggleClass("hidden");
 });
 
+bus_store.on('update', function(store, data){
+	buildList(data);
+	buildMap(data);
+});
 
+$(window).resize(function(e){
+	$('#mapView').height(document.body.offsetHeight - 140)
+});
