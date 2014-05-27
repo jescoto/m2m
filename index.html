@@ -40,19 +40,19 @@
               <div class="form-group">
                 <label>Select your line:</label>
                 <select class="form-control" id="lines-sel">
-                  <option value="0">Line Choice</option>
+                  <option value="0"></option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Select the direction:</label>
                 <select class="form-control" id="lines-way" disabled>
-                  <option value="0">Way Choice</option>
+                  <option value="0"></option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Select bus stop:</label>
                 <select class="form-control" id="lines-stop" disabled>
-                  <option value="0" data-pat="0">Bus Stop Choice</option>
+                  <option value="0"></option>
                 </select>
               </div>
             </div>
@@ -189,9 +189,8 @@
 		window.myScroll = new IScroll('#scroller', {
 			mouseWheel: true,
 			//scrollbars: true
-		});
-		
-		
+    });
+		setTimeout(function() { firstLoad(); }, 1000);
 			
 		var pages = $('.page');
 		var totalPages = pages.length;

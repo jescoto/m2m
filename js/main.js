@@ -248,6 +248,11 @@ function findAt(record, name, val){
 	})
 }
 
+function firstLoad() {
+	getLines();
+	$('#lineModal').modal('show');
+	console.log("Loaded");
+}
 
 $("#lines-sel").change(function() {
 	var way_val = $("#lines-sel option:selected").val();
@@ -265,7 +270,7 @@ $("#lines-sel").change(function() {
 	return way_val;
 });
 
-$("#lines-way").change(function() {
+$("#lines-way").on('change', function() {
 	var stop_val = $("#lines-way option:selected").val();
 	var stop = stop_val;
 	if (stop_val > 0) {
@@ -322,3 +327,5 @@ $(window).resize(function(e){
 	$('#mapView').height(document.body.offsetHeight - 140);
 	$('#frame').height(document.body.offsetHeight - 140);
 });
+
+
