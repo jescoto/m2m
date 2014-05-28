@@ -294,9 +294,7 @@ $("#lines-stop").change(function() {
 	configArrival.stopObj = findAt(configArrival.stopsObj_origin, 'id',  $("#lines-stop option:selected").val())[0];
 });
 
-$("#load-sel").click(function() {
-	getLines();
-});
+
 
 $("#run-btn").click(function() {
 	$("#lineModal").modal("hide");
