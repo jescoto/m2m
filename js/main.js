@@ -28,23 +28,23 @@ var configArrival = {
 
 
 function getLines(){
-	$.getJSON(linesAPI, function(json) {
-	var lines = json.linhas;
-	console.log(linesAPI);
-	
-	configArrival.linesObj_origin = lines;
-	
-	$.each(lines, function(index, value) {
-		
-		var line_name = lines[index].nome;
-		var line_id = lines[index].id;
-		$('#lines-sel').append($('<option>')
-			.text(line_name)
-			.attr('value', line_id)
-		);
-	});
-
-	});
+ $.getJSON(linesAPI, function(json) {
+  var lines = json.linhas;
+  console.log(linesAPI);
+  
+  configArrival.linesObj_origin = lines;
+  
+  $.each(lines, function(index, value) {
+   
+   var line_name = lines[index].nome;
+   var line_id = lines[index].id;
+   $('#lines-sel').append($('<option>')
+    .text(line_name)
+    .attr('value', line_id)
+   );
+  });
+  $('#lines-sel').trigger('change');
+ });
 }
 
 function getWay(way_val) {
@@ -66,6 +66,7 @@ function getWay(way_val) {
 			.attr('value', ways_id)
 		);
 	});
+	$('#lines-way').trigger('change');
 	});
 	return way_val;
 }
@@ -90,6 +91,7 @@ function getStop(stop_val) {
 		$('#lines-stop').append($('<option>').text(stop_name).attr('value', stop_id).attr('pat', stop_fac));
 
 	});
+	$('#lines-stop').trigger('change');
 	});
 }
 
