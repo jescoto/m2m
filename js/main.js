@@ -26,72 +26,97 @@ var configArrival = {
 
 
 
+function setLoading(input, enable){
+	
+	if(typeof enable == undefined || enable == null || enable == true){
+		input.prev('i').removeClass('hide');
+		input.attr('disabled', 'true');
+	}else{
+		input.prev('i').addClass('hide');
+		input.removeAttr('disabled');
+	}
+}
+
 
 function getLines(){
- $.getJSON(linesAPI, function(json) {
-  var lines = json.linhas;
-  console.log(linesAPI);
+	
+	var select = $('#lines-sel');
+	setLoading(select);
+	
+ 	$.getJSON(linesAPI, function(json) {
+  		var lines = json.linhas;
+  		console.log(linesAPI);
   
-  configArrival.linesObj_origin = lines;
+  		configArrival.linesObj_origin = lines;
   
-  $.each(lines, function(index, value) {
+  		$.each(lines, function(index, value) {
    
-   var line_name = lines[index].nome;
-   var line_id = lines[index].id;
-   $('#lines-sel').append($('<option>')
-    .text(line_name)
-    .attr('value', line_id)
-   );
-  });
-  $('#lines-sel').trigger('change');
- });
+   			var line_name = lines[index].nome;
+   			var line_id = lines[index].id;
+   			select.append($('<option>')
+    			.text(line_name)
+    			.attr('value', line_id)
+   			);
+  		});
+  		setLoading(select, false);
+  		select.trigger('change');
+ 	});
 }
 
 function getWay(way_val) {
 	var wayAPI = host + "OperadorServiceRest/sentidos/" + way_val;
-
+	var select = $('#lines-way');
+	
+	setLoading(select);
+	
 	$.getJSON(wayAPI, function(json) {
-	var ways = json.sentidos;
-	console.log(wayAPI);
+		var ways = json.sentidos;
+		console.log(wayAPI);
 	
-	configArrival.waysObj_origin = ways;
-	
-	$.each(ways, function(index, value) {
-		var ways_name = ways[index].nome;
-		var ways_id = ways[index].id;
-		var ways_tipo = ways[index].tipo;
+		configArrival.waysObj_origin = ways;
 		
-		$('#lines-way').append($('<option>')
-			.text(ways_name)
-			.attr('value', ways_id)
-		);
-	});
-	$('#lines-way').trigger('change');
+		$.each(ways, function(index, value) {
+			var ways_name = ways[index].nome;
+			var ways_id = ways[index].id;
+			var ways_tipo = ways[index].tipo;
+			
+			$('#lines-way').append($('<option>')
+				.text(ways_name)
+				.attr('value', ways_id)
+			);
+		});
+		setLoading(select, false);
+		$('#lines-way').trigger('change');
 	});
 	return way_val;
 }
 
 function getStop(stop_val) {
 	var stopAPI = host+ "OperadorServiceRest/pontos/" + stop_val;
+	var select = $('#lines-stop');
+	
+	setLoading(select);
+	
 	console.log(stopAPI);
 	$.getJSON(stopAPI, function(json) {
-	var stop = json.pontos;
-	
-	configArrival.stopsObj_origin = stop;
-	
-	
-	$.each(stop, function(index, value) {
-		var stop_name = stop[index].nome;
-		var stop_id = stop[index].id;
-		var stop_tipo = stop[index].tipo;
-		var stop_lat = stop[index].latitude;
-		var stop_long = stop[index].longitude;
-		var stop_fac = stop[index].patternFraction;
+		var stop = json.pontos;
 		
-		$('#lines-stop').append($('<option>').text(stop_name).attr('value', stop_id).attr('pat', stop_fac));
-
-	});
-	$('#lines-stop').trigger('change');
+		configArrival.stopsObj_origin = stop;
+		
+		
+		$.each(stop, function(index, value) {
+			var stop_name = stop[index].nome;
+			var stop_id = stop[index].id;
+			var stop_tipo = stop[index].tipo;
+			var stop_lat = stop[index].latitude;
+			var stop_long = stop[index].longitude;
+			var stop_fac = stop[index].patternFraction;
+			
+			$('#lines-stop').append($('<option>').text(stop_name).attr('value', stop_id).attr('pat', stop_fac));
+	
+		});
+		setLoading(select, false);
+		$('#lines-stop').trigger('change');
 	});
 }
 
@@ -198,7 +223,7 @@ function buildList(data){
 								'<div class="bus-line">' +
 									'<p class="vehicle-title">' + bus_code + '</p>' +
 										'<img src="img/loc.png" width="10px" height="auto" class="topminus5">' +
-										'<span class="geo">Current Location</span>' +
+										'<span>Current Location</span>' +
 									'</div>' +
 								'</div>' +
 							'</div>');
