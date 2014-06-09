@@ -24,7 +24,12 @@ var configArrival = {
 	stopObj: null
 };
 
-
+$.ajaxSetup({ 
+	cache: false,
+	beforeSend: function(jqXHR) {
+    	jqXHR.overrideMimeType("text/html;charset=iso-8859-1");
+    }
+});
 
 function setLoading(input, enable){
 	
@@ -210,9 +215,9 @@ function buildList(data){
 					time = time + " mins";
 				}
 
-			var appended = $('<div class="bus-box" data-toggle="modal" data-target="#mapModal" lat=' + '"' + bus_lat + '"' + " " +'lng=' + '"' + bus_lng + '"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus@2x.png" height="35px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto" class="topminus5"><span class="geo">Current Location</span></div></div></div>');
+			//var appended = $('<div class="bus-box" data-toggle="modal" data-target="#mapModal" lat=' + '"' + bus_lat + '"' + " " +'lng=' + '"' + bus_lng + '"><div class="bus-time"><div class="bus-box-left pull-left"><p>'+ time +'</p><img src="img/bus@2x.png" height="35px" width="auto"></div></div><div class="bus-right pull-left"><div class="bus-line"><p class="vehicle-title">' + bus_code + '</p><img src="img/loc.png" width="10px" height="auto" class="topminus5"><span class="geo">Current Location</span></div></div></div>');
 
-			var appended = $('<div class="bus-box" '/*data-toggle="modal" data-target="#mapModal" lat=' + '"' + bus_lat + '"' + " " +'lng=' + '"' + bus_lng + '*/+'>' +
+			var appended = $('<div class="bus-box" >' +
 								'<div class="bus-time">' +
 									'<div class="bus-box-left pull-left">' +
 										'<p>'+ time +'</p>' +
@@ -222,9 +227,8 @@ function buildList(data){
 							'<div class="bus-right pull-left">' +
 								'<div class="bus-line">' +
 									'<p class="vehicle-title">' + bus_code + '</p>' +
-										'<img src="img/loc.png" width="10px" height="auto" class="topminus5">' +
-										'<span>Current Location</span>' +
-									'</div>' +
+									'<img src="img/loc.png" width="10px" height="auto" class="topminus5">' +
+									'<span>Current Location</span>' +
 								'</div>' +
 							'</div>');
 
