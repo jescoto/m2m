@@ -132,9 +132,9 @@
 <div id="sidr" class="nav-side">
   <p>Menu</p>
   <ul class="nav-text">
-    <li><span><a href="#" onclick="$('.transition-container').removeClass('page-show-map page-show-shared').addClass('page-show-list')">Lista</a></span></li>
-    <li><span><a href="#" onclick="$('.transition-container').removeClass('page-show-list page-show-shared').addClass('page-show-map')">Bus Map</a></span></li>
-    <li><span><a href="#" onclick="$('.transition-container').removeClass('page-show-map page-show-list').addClass('page-show-shared')">iFrame</a></span></li>
+    <li><span><a href="#" onclick="pageShow('.page:nth-child(1)')">Lista</a></span></li>
+    <li><span><a href="#" onclick="pageShow('.page:nth-child(2)')">Bus Map</a></span></li>
+    <li><span><a href="#" onclick="pageShow('.page:nth-child(3)')">iFrame</a></span></li>
     <li><span><a href="#" data-toggle="modal" data-target="#emailModal">Contact Us</a></span></li>
   </ul>
 </div>
@@ -146,7 +146,7 @@
 
 	<div class="transition-container">
 		<div id="scroller">
-			<div class="page" id="container-list">			
+			<div class="page show-page" id="container-list">			
 				<!--<div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3" id="bus-list">-->
 				<div class="" id="bus-list">	
 
@@ -155,12 +155,12 @@
 				</div>
 			</div>
         
-			<div class="page">
+			<div class="page  show-page hide-page">
 				<div id="mapView" class="col-xs-12">
 				</div>
 			</div>
 			
-			<div class="page">
+			<div class="page  show-page hide-page">
 				<div id="frame">
 					<div class="col-xs-12" style="height: 100%;">
 						<iframe src="frame.html" style="border: 0; width: 100%; height: 100%; top: 0px;"></iframe>
@@ -185,6 +185,34 @@
 	<script src="js/iscroll.js"></script>
 	<script src="js/markerwithlabel.js"></script>
     <script>
+	
+	if (!Function.prototype.bind) {
+            Function.prototype.bind = function (oThis) {
+                if (typeof this !== "function") {
+                    // closest thing possible to the ECMAScript 5 internal IsCallable function
+                    throw new TypeError ("Function.prototype.bind - what is trying to be bound is not callable");
+                }
+
+                var aArgs = Array.prototype.slice.call (arguments, 1),
+                        fToBind = this,
+                        fNOP = function () {
+                        },
+                        fBound = function () {
+                            return fToBind.apply (this instanceof fNOP && oThis
+                                    ? this
+                                    : oThis,
+                                    aArgs.concat (Array.prototype.slice.call (arguments)));
+                        };
+
+                fNOP.prototype = this.prototype;
+                fBound.prototype = new fNOP ();
+
+                return fBound;
+            };
+        }
+		
+		
+	
     $(document).ready(function() {
       $('#side-nav').sidr();
 		window.myScroll = new IScroll('#scroller', {
@@ -192,14 +220,14 @@
 			//scrollbars: true
     });
 		setTimeout(function() { firstLoad(); }, 1000);
-			
+		/*	
 		var pages = $('.page');
 		var totalPages = pages.length;
 		
 		pages.each(function(count){
 			transition.bind(this, count*100, 0 , 0)();
 		});
-		
+		*/
 		$('#mapView').height(document.body.offsetHeight - 140);
 		$('#frame').height(document.body.offsetHeight - 140);
 		

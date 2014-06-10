@@ -9,6 +9,7 @@
 
 #scroller {
 	height: 100%;
+	-webkit-perspective: 700px;
 }
 
 #mapView {
@@ -65,12 +66,17 @@
 	position: fixed;
 	left: 0;
 	right: 0;
-	z-index: 1;
+	z-index: 1000;
 }
 
 .page {
 	width: 100%;
 	position: absolute;
+	-webkit-transition: all .5s ease-in;
+}
+
+.transition-container .page:not(:first-child){
+	//display: none;
 }
 
 .page-show-map {
@@ -84,6 +90,118 @@
 .page-show-list {
 	-webkit-transform: translateX(0%); 
 }
+
+
+.show-page{
+	/*
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-fill-mode: forwards;
+	-webkit-animation-name: showPage-display, showPage-transform, showPage-opacity, showPage-zindex;
+	
+    animation-duration: 1s;
+	animation-fill-mode:forwards;
+	animation-name: showPage-display, showPage-transform, showPage-opacity, showPage-zindex;
+	*/
+	
+	-webkit-transform: translateZ(0px);
+	opacity: 1;
+	z-index: 3;
+	//display: block;
+}
+
+.hide-page{
+	/*
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-fill-mode: forwards;
+	-webkit-animation-name: hidePage-display, hidePage-transform, hidePage-opacity, hidePage-zindex;
+	
+    animation-duration: 1s;
+	animation-fill-mode:forwards;
+	animation-name: hidePage-display, hidePage-transform, hidePage-opacity, hidePage-zindex;
+	*/
+	-webkit-transform: translateZ(-1000px);
+	opacity: 0;
+	z-index: 1;
+	//display: none;
+}
+
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes showPage-display {
+	from {
+		display: none;
+	}
+	to {
+		display: block;
+	}
+}
+
+@-webkit-keyframes showPage-transform {
+	from {
+		-webkit-transform: translateZ(-1000px);
+	}
+	to {
+			-webkit-transform: translateZ(0px);
+	}
+}
+
+@-webkit-keyframes showPage-opacity {
+	from {
+		opacity: 0;
+	}
+	to {
+			opacity: 1;
+	}
+}
+
+@-webkit-keyframes showPage-zindex {
+	from {
+		z-index: 1;
+	}
+	to {
+		z-index: 3;
+	}
+}
+
+
+
+
+@-webkit-keyframes hidePage-display {
+    from {
+		display: block;
+	}
+	to {
+		display: none;
+	}
+}
+
+@-webkit-keyframes hidePage-transform {
+    from {
+		-webkit-transform: translateZ(0px);
+	}
+	to {
+		-webkit-transform: translateZ(-1000px);
+	}
+}
+
+@-webkit-keyframes hidePage-opacity {
+    from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes hidePage-zindex {
+    from {
+		z-index: 3;
+	}
+	to {
+		z-index: 1;
+	}
+}
+
 
 .markerLabel{
 	white-space: nowrap; 

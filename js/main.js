@@ -219,12 +219,12 @@ function buildList(data){
 
 			var appended = $('<div class="bus-box" >' +
 								'<div class="bus-time">' +
-									'<div class="bus-box-left pull-left">' +
+									'<div class="bus-box-left">' +
 										'<p>'+ time +'</p>' +
 										'<img src="img/bus@2x.png" height="35px" width="auto">' +
 									'</div>' +
 								'</div>' +
-							'<div class="bus-right pull-left">' +
+							'<div class="bus-right">' +
 								'<div class="bus-line">' +
 									'<p class="vehicle-title">' + bus_code + '</p>' +
 									'<img src="img/loc.png" width="10px" height="auto" class="topminus5">' +
@@ -358,3 +358,15 @@ $(window).resize(function(e){
 });
 
 
+
+function pageShow(selector){
+	pageHide();
+	
+	$(selector).removeClass('hide-page');
+	
+	
+}
+
+function pageHide(){
+	$('.show-page').addClass('hide-page');
+}
