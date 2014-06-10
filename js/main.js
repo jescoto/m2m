@@ -375,3 +375,20 @@ function pageHide(){
 function toggleMenu(){
 	$('#sidr').toggleClass('show-menu');
 }
+
+
+function processBackButton(){
+	var modal = $('div[aria-hidden=false]');
+	
+	if(!!(modal.length)){
+		modal.modal('hide');
+	}else if ($('.page:nth-child(1)').hasClass('hide-page')){
+		pageShow('.page:nth-child(1)');
+		console.log('to page 1')
+	}else{
+		try{
+			Device.exitAlert();
+		}catch(e){}
+	}
+}
+

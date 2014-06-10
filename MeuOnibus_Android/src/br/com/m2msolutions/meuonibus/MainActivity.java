@@ -8,12 +8,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
+
 
 public class MainActivity extends Activity {
 
@@ -23,7 +26,8 @@ public class MainActivity extends Activity {
 
 
 	private WebView webView;
-	private AlertDialog alerta;
+	private InterfaceJS interfaceJS;
+	
 	
 
 	@Override
@@ -34,35 +38,17 @@ public class MainActivity extends Activity {
 		//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		setUpWebView();
-		
+		interfaceJS = new InterfaceJS(webView, this);
 	}
 	
 
 	@Override
 	public void onBackPressed() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-		builder.setTitle("Fechar aplicação");
-		builder.setMessage("Deseja fechar a aplicação?");
-		builder.setIcon(R.drawable.ic_launcher);
-
-		builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
-				MainActivity.super.onBackPressed();
-			}
-		});
-
-		builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
-				//
-			}
-		});
-
-		alerta = builder.create();
-		alerta.show();
-
-		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		v.vibrate(100);
+		try{
+			webView.loadUrl("javascript:processBackButton()");
+		}catch(Exception e){
+			interfaceJS.exitAlert();
+		}
 	}
 
 	@Override
@@ -70,6 +56,17 @@ public class MainActivity extends Activity {
 		webView.destroy();
 		super.onDestroy();
 	}
+	
+	
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_MENU) {
+	    	webView.loadUrl("javascript:toggleMenu()");
+	        return true;
+	    } else {
+	        return super.onKeyUp(keyCode, event);
+	    }
+	}
+	
 
 	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
@@ -84,6 +81,12 @@ public class MainActivity extends Activity {
 				    Log.d("WebConsole", message + " -- From line "
 				                         + lineNumber + " of "
 				                         + sourceID);
+				    
+				    
+				    if(message.equals("Uncaught ReferenceError: processBackButton is not defined")){
+				    	Log.v("teste", "ta aki");
+				    	interfaceJS.exitAlert();
+				    }
 				  }
 				  
 				  public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) { 
@@ -95,7 +98,8 @@ public class MainActivity extends Activity {
 			// webView.setId(WEB_ID);
 			// Wait for the page to load then send the location information
 			// webView.setWebViewClient(new WebViewClient());
-			// webView.addJavascriptInterface(new InterfaceJS(webView, this), "Device");
+			
+			webView.addJavascriptInterface(new InterfaceJS(webView, this), "Device");
 			WebSettings settings = webView.getSettings(); 
 			settings.setDatabaseEnabled(true); 
 			String databasePath = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath(); 
@@ -119,6 +123,5 @@ public class MainActivity extends Activity {
 
 		}
 	}
-
 
 }
