@@ -332,11 +332,11 @@ $("#run-btn").click(function() {
 });
 
 
-$("body").click(function(e) {
-	if(e.target != sidr) {
-	$.sidr("close");
-	} else {
-		console.log("not target");
+$(document).click(function(e) {
+	var sidr = $('#sidr');
+	
+	if(e.target != sidr[0] && sidr.hasClass('show-menu')) {
+		toggleMenu();
 	}
 });
 
@@ -369,4 +369,9 @@ function pageShow(selector){
 
 function pageHide(){
 	$('.show-page').addClass('hide-page');
+}
+
+
+function toggleMenu(){
+	$('#sidr').toggleClass('show-menu');
 }

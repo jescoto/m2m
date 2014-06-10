@@ -12,7 +12,7 @@
     <link href="css/main.css" rel="stylesheet">
     <link href="css/font-awesome.css" rel="stylesheet">
     <link href="css/jquery.sidr.dark.css" rel="stylesheet">
-    <link href="css/elementTransitions.css" rel="stylesheet">
+    <!-- <link href="css/elementTransitions.css" rel="stylesheet"> -->
 	<link href="css/newRolles.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -115,7 +115,7 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <div class="navbar-left nav-menu pull-left">
-            <a class="navbar-link" id="side-nav" href="#sidr"><i class="fa fa-bars"></i></a>
+            <a class="navbar-link" id="side-nav" href="javascript:toggleMenu()"><i class="fa fa-bars"></i></a>
           </div>
           <a class="navbar-brand" href="#"><img src="img/logo.png" width="120px"></a>
           <div class="navbar-right nav-menu pull-right" id="top-right">
@@ -129,7 +129,7 @@
 </nav>
 
 
-<div id="sidr" class="nav-side">
+<div id="sidr" class="nav-side sidr left">
   <p>Menu</p>
   <ul class="nav-text">
     <li><span><a href="#" onclick="pageShow('.page:nth-child(1)')">Lista</a></span></li>
@@ -176,12 +176,12 @@
  
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.sidr.min.js"></script>
+    <!-- <script src="js/jquery.sidr.min.js"></script> -->
 	<script src="js/store.js"></script>
 	<script src="js/map.js"></script>
     <script src="js/geocoder.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/elementTransitions.js"></script>
+    <!-- <script src="js/elementTransitions.js"></script> -->
 	<script src="js/iscroll.js"></script>
 	<script src="js/markerwithlabel.js"></script>
     <script>
@@ -214,11 +214,17 @@
 		
 	
     $(document).ready(function() {
-      $('#side-nav').sidr();
+      //$('#side-nav').sidr();
 		window.myScroll = new IScroll('#scroller', {
 			mouseWheel: true,
 			//scrollbars: true
-    });
+    }	);
+		window.contactScroll = new IScroll('#emailModal');
+		$('#emailModal').on('shown.bs.modal', function(){
+			contactScroll.refresh();
+		});
+		
+		
 		setTimeout(function() { firstLoad(); }, 1000);
 		/*	
 		var pages = $('.page');

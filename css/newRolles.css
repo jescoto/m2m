@@ -7,9 +7,30 @@
 	overflow: hidden;
 }
 
+.navbar-header > div > a{
+	display: block;
+	width: 25px;
+}
+
+.sidr{
+	display: block;
+	position: absolute;
+	-webkit-transition: .3s ease-out;
+	width: 12em !important;
+}
+
+
+.show-menu{
+	-webkit-transform: translateX(260px);
+}
+
 #scroller {
 	height: 100%;
 	-webkit-perspective: 700px;
+	-moz-perspective: 700px;
+	-ms-perspective: 700px;
+	-o-perspective: 700px;
+	perspective: 700px;
 }
 
 #mapView {
