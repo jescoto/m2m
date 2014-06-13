@@ -229,3 +229,12 @@ body {
     font-weight: 700;
   }
 }
+.comp-logo {
+  position: absolute;
+  top: 60px;
+  left: 10px;
+}
+#bus-logo img {
+  width: 25px;
+  height: auto;
+}

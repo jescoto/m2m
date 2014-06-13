@@ -129,7 +129,7 @@ function getStop(stop_val) {
 
 function update() {
 	
-	clearInterval(updateTimes);
+	//clearInterval(updateTimes);
 
 	var way_sel = $("#lines-way option:selected").val();
 	var line_sel = $("#lines-sel option:selected").val();
@@ -157,14 +157,15 @@ function update() {
 			
 			
 			getBuses();
-			updateTimes = setInterval(function(){
-					getBuses();
-			}, 20000);
+			//updateTimes = setInterval(function(){
+					//getBuses();
+			//}, 20000);
 		});
 
 	});
 	
-	$('.line-title').text(configArrival.lineObj.nome);
+	$('.line-title').html('<img src="img/mta.png" id="bus-logo">' + '<span>' + ' '+ configArrival.lineObj.nome + '</span>');
+	$(window).scrollTop(0);
 
 //	caltime = calTime(timing, stop_pat);
 //	caldist = calDis(meters, stop_pat);
@@ -234,6 +235,7 @@ function buildList(data){
 
 			$("#bus-list").append(appended);
 			appended.geocoder(bus_lat, bus_lng);
+			$(".update").toggle("show");
 			
 			myScroll.refresh();
 		}
@@ -323,7 +325,9 @@ $("#lines-stop").change(function() {
 	configArrival.stopObj = findAt(configArrival.stopsObj_origin, 'id',  $("#lines-stop option:selected").val())[0];
 });
 
-
+$(".update").click(function() {
+	getBuses();
+});
 
 $("#run-btn").click(function() {
 	$("#lineModal").modal("hide");
