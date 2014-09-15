@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>M2M App</title>
+    <title>MeuOnibus</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -14,6 +14,7 @@
     <link href="css/jquery.sidr.dark.css" rel="stylesheet">
     <!-- <link href="css/elementTransitions.css" rel="stylesheet"> -->
 	<link href="css/newRolles.css" rel="stylesheet">
+	<link href="css/widget-select.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,74 +30,74 @@
     <!-- Modals -->
 
 <!-- Modal -->
-      <div class="modal fade" id="lineModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal fade" id="lineModal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Title</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+              <h4 class="modal-title" id="myModalLabel">Seleção de Ponto</h4>
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label>Select your line:</label>  <i class="fa fa-spinner fa-spin hiden"></i>
+                <label>Escolha sua Linha:</label>  <i class="fa fa-spinner fa-spin hiden"></i>
                 <select class="form-control" id="lines-sel">
 
                 </select>
               </div>
               <div class="form-group">
-                <label>Select the direction:</label> <i class="fa fa-spinner fa-spin hiden"></i>
+                <label>Escolha o Sentido:</label> <i class="fa fa-spinner fa-spin hiden"></i>
                 <select class="form-control" id="lines-way" disabled>
                   
                 </select>
               </div>
               <div class="form-group">
-                <label>Select bus stop:</label>  <i class="fa fa-spinner fa-spin hiden"></i>
+                <label>Escolha o Ponto:</label>  <i class="fa fa-spinner fa-spin hiden"></i>
                 <select class="form-control" id="lines-stop" disabled>
                 
                 </select>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-warning btn-block" id="run-btn" disabled="disabled">Update</button>
+              <button type="button" class="btn btn-warning btn-block" id="run-btn" disabled="disabled">Atualizar</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal fade" id="emailModal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Contact Us</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+              <h4 class="modal-title" id="myModalLabel">Contato</h4>
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label>Name</label>
-                <input class="form-control" type="text" id="user-name" placeholder="John Smith">
+                <label>Nome</label>
+                <input class="form-control" type="text" id="user-name" placeholder="José da Silva">
               </div>
               <div class="form-group">
-                <label>Email Address</label>
-                <input class="form-control" type="email" id="user-email" placeholder="john@example.com">
+                <label>Email</label>
+                <input class="form-control" type="email" id="user-email" placeholder="jose@example.com">
               </div>
               <div class="form-group">
-                <label>Message</label>
-                <textarea name="textarea" rows="10" class="form-control" placeholder="Write something here..."></textarea>
+                <label>Mensagem</label>
+                <textarea name="textarea" rows="10" class="form-control" placeholder="Sua mensagem aqui..."></textarea>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-success btn-block" id="send-btn">Send</button>
+              <button type="button" class="btn btn-success btn-block" id="send-btn">Enviar</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal fade" id="mapModal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Bus Map</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+              <h4 class="modal-title" id="myModalLabel">Ônibus no Mapa</h4>
             </div>
             <div class="modal-body map-box">
               <div id="bus-map">
@@ -117,7 +118,7 @@
           <div class="navbar-left nav-menu pull-left">
             <a class="navbar-link" id="side-nav" href="javascript:toggleMenu()"><i class="fa fa-bars"></i></a>
           </div>
-          <a class="navbar-brand" href="#"><img src="img/logo.png" width="120px"></a>
+          <a class="navbar-brand" href="#" id="compani-name"></a>
           <div class="navbar-right nav-menu pull-right" id="top-right">
             <a class="navbar-link" id="load-sel" href="#" data-toggle="modal" data-target="#lineModal"><i class="fa fa-ellipsis-v"></i></a>
           </div>
@@ -127,20 +128,66 @@
   </div><!-- /.container-fluid -->
   
 </nav>
+<!--<progress max="100" min="0" value="0"></progress>-->
 
 
 <div id="sidr" class="nav-side sidr left">
-  <p>Menu</p>
+  <p style="padding-top:10px;">Menu</p>
   <ul class="nav-text">
     <li><span><a href="#" onclick="pageShow('.page:nth-child(1)')">Lista</a></span></li>
-    <li><span><a href="#" onclick="pageShow('.page:nth-child(2)')">Bus Map</a></span></li>
-    <li><span><a href="#" onclick="pageShow('.page:nth-child(3)')">iFrame</a></span></li>
-    <li><span><a href="#" data-toggle="modal" data-target="#emailModal">Contact Us</a></span></li>
+    <li><span><a href="#" onclick="pageShow('.page:nth-child(2)')">Mapa</a></span></li>
+    <li><span><a href="#" onclick="pageShow('.page:nth-child(3)')">Notas</a></span></li>
+    <li><span><a href="#" data-toggle="modal" data-target="#emailModal">Contato</a></span></li>
   </ul>
+  <img >
 </div>
+<div class="bus-comp-logo">
+  <span class="comp-name"><img src="img/logo.png" width="120px"></span>
+  <!--
+  <div class="circle">
+    <div class="circle-fill"></div>
+  </div>
+  -->
+  <div id="content-gauge">
+    <canvas id="gauge" height="35" width="70"></canvas>
 
+    <div id="refresh" style="
+        position: relative;  
+        top: -38px;  
+        height: 35px;
+        text-align: center;
+        color: #B7EC7E;
+        font-size: 21px;
+        -webkit-transition: all .2s ease-out;
+        -moz-transition: all .2s ease-out;
+        -ms-transition: all .2s ease-out;
+        transition: all .2s ease-out;
+    ">
+      <i class="fa fa-refresh" style="
+          position: relative;
+          top: 2px;
+          text-shadow: #000 0 2px 6px;
+      "></i>
+
+    </div>
+  </div>
+  <!--
+  <div id="displayGauge" style="
+    position: relative;
+    font-size: 22px;
+    top: -72px;
+    color: #fefefe;
+    text-shadow: #000 0 0 10px;
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+  ">
+  </div>
+  -->
+  <!--<img src="img/Transurb.jpg">-->
+</div>
 <div class="line-title">
-
 </div>
 
 <div class="row-in" id="content">
@@ -149,8 +196,11 @@
 		<div id="scroller">
 			<div class="page show-page" id="container-list">			
 				<!--<div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3" id="bus-list">-->
-				
-        <div class="" id="bus-list"></div>
+				<div class="" id="bus-list">	
+
+
+          
+				</div>
 			</div>
         
 			<div class="page  show-page hide-page">
@@ -160,8 +210,8 @@
 			
 			<div class="page  show-page hide-page">
 				<div id="frame">
-					<div class="col-xs-12" style="height: 100%;">
-						<iframe src="frame.html" style="border: 0; width: 100%; height: 100%; top: 0px;"></iframe>
+					<div class="" style="height: 100%;">
+						<iframe  style="border: 0; width: 100%; height: 100%; top: 0px;"></iframe>
 					</div>
 				</div>
 			</div>
@@ -173,16 +223,19 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
  
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- <script src="js/jquery.sidr.min.js"></script> -->
+  <script src="config.ini.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- <script src="js/jquery.sidr.min.js"></script> -->
 	<script src="js/store.js"></script>
 	<script src="js/map.js"></script>
     <script src="js/geocoder.js"></script>
     <script src="js/main.js"></script>
     <!-- <script src="js/elementTransitions.js"></script> -->
 	<script src="js/iscroll.js"></script>
+	<script src="js/widget-select.js"></script>
 	<script src="js/markerwithlabel.js"></script>
-    <script>
+  <script src="js/gauge.min.js"></script>
+  <script>
 	
 	if (!Function.prototype.bind) {
             Function.prototype.bind = function (oThis) {
@@ -212,8 +265,12 @@
 		
 	
     $(document).ready(function() {
+	
+		window.selectLine = new WxSelect("#lines-sel");
+		window.selectWay = new WxSelect("#lines-way");
+		window.selectPoint = new WxSelect("#lines-stop");
+	
       //$('#side-nav').sidr();
-      $(".update").toggle("hide");
 		window.myScroll = new IScroll('#scroller', {
 			mouseWheel: true,
 			//scrollbars: true
@@ -233,8 +290,34 @@
 			transition.bind(this, count*100, 0 , 0)();
 		});
 		*/
-		$('#mapView').height(document.body.offsetHeight - 140);
-		$('#frame').height(document.body.offsetHeight - 140);
+		$('#mapView').height(document.body.offsetHeight - 160);
+		$('#frame iframe').height(document.body.offsetHeight - 160);
+    $('#refresh').on('click', function(e){
+      getBuses();
+    });
+
+
+    var opts = {
+      lines: 12, // The number of lines to draw
+      angle: 0.35, // The length of each line
+      lineWidth: 0.1, // The line thickness
+      pointer: {
+        length: 0.9, // The radius of the inner circle
+        strokeWidth: 0.035, // The rotation offset
+        color: '#000000' // Fill color
+      },
+      limitMax: 'false',   // If true, the pointer will not go past the end of the gauge
+      colorStart: '#B7EC7E',   // Colors
+      colorStop: '#B7EC7E',    // just experiment with them
+      strokeColor: '#ababab',   // to see which ones work best for you
+      generateGradient: true
+    };
+    var target = document.getElementById('gauge'); // your canvas element
+    gauge = new Donut(target).setOptions(opts); // create sexy gauge!
+    gauge.maxValue = 100; // set max gauge value
+    gauge.animationSpeed = 32; // set animation speed (32 is default value)
+    gauge.set(0);
+    //gauge.setTextField(document.querySelector('#displayGauge'));
 		
     });
     </script>

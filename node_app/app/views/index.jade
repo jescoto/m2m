@@ -1,0 +1,24 @@
+extends layout
+
+block content
+	if typeof msg != undefined && msg != null
+		if success == true
+			.msg.success
+				p= msg
+		else
+			.msg.error
+				p= msg
+	.content
+		section.main
+			header
+				h1= client_name
+			p.description *Painel de envio de arquivos
+			.form
+				form#upload-form(method="POST", enctype="multipart/form-data", name="upload-form")
+					label(for="upload") Arquivo: 
+					input.custom-file-input#upload(type="file", name="upload")
+					input.simulate-file-input(type="text", placeholder="Selecione o arquivo")
+					button.input-file-button(type="button") En
+			footer
+				input#submit(type="submit", value="Enviar", form="upload-form")
+

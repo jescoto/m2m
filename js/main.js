@@ -1,5 +1,7 @@
-var host = 'http://173.224.125.206:8803/';
-var linesAPI = 'http://173.224.125.206:8803/OperadorServiceRest/linhas';
+var host = conf.path_to_webservice;
+var linesAPI = conf.path_to_webservice + 'linhas';
+var time2Update = conf.min_time_to_refresh;
+var secondsLeft = 0;
 var line_Data = [];
 var way_val, stop_val = 0;
 var meters = 0;
@@ -48,8 +50,12 @@ function getLines(){
 	var select = $('#lines-sel');
 	setLoading(select);
 	
- 	$.getJSON(linesAPI, function(json) {
+ 	$.getJSON(host + "linhas", function(json) {
   		var lines = json.linhas;
+
+  		lines = lines.filter(function(e){
+  			return conf.er_line_filter.test(e.nome)
+  		});
   		console.log(linesAPI);
   
   		configArrival.linesObj_origin = lines;
@@ -69,7 +75,7 @@ function getLines(){
 }
 
 function getWay(way_val) {
-	var wayAPI = host + "OperadorServiceRest/sentidos/" + way_val;
+	var wayAPI = host + "sentidos/" + way_val;
 	var select = $('#lines-way');
 	
 	setLoading(select);
@@ -97,7 +103,7 @@ function getWay(way_val) {
 }
 
 function getStop(stop_val) {
-	var stopAPI = host+ "OperadorServiceRest/pontos/" + stop_val;
+	var stopAPI = host+ "pontos/" + stop_val;
 	var select = $('#lines-stop');
 	
 	setLoading(select);
@@ -130,12 +136,13 @@ function getStop(stop_val) {
 function update() {
 	
 	//clearInterval(updateTimes);
+	secondsLeft = 0;
 
 	var way_sel = $("#lines-way option:selected").val();
 	var line_sel = $("#lines-sel option:selected").val();
 	var stop_pat = $("#lines-stop option:selected").attr('pat');
-	var stop_sel_API = host + "OperadorServiceRest/sentido/" + way_sel +"/tamanho";
-	var stop_time_API = host + "OperadorServiceRest/sentido/" + line_sel + "/" + way_sel + "/tempomedio";
+	var stop_sel_API = host + "sentido/" + way_sel +"/tamanho";
+	var stop_time_API = host + "sentido/" + line_sel + "/" + way_sel + "/tempomedio";
 
 	$.getJSON(stop_sel_API, function(json) {
 		meters = json.int;
@@ -157,27 +164,78 @@ function update() {
 			
 			
 			getBuses();
-			//updateTimes = setInterval(function(){
-					//getBuses();
-			//}, 20000);
+			updateTimes = setInterval(updateData, 1000);
 		});
 
 	});
 	
-	$('.line-title').html('<img src="img/mta.png" id="bus-logo">' + '<span>' + ' '+ configArrival.lineObj.nome + '</span>');
-	$(window).scrollTop(0);
+		$('.line-title').html(configArrival.lineObj.nome.toUpperCase() +" - "+ configArrival.stopObj.nome.toUpperCase());
+		$(window).scrollTop(0);
 
 //	caltime = calTime(timing, stop_pat);
 //	caldist = calDis(meters, stop_pat);
 //	getBuses(line_sel, way_sel, stop_pat, caltime, caldist);
 }
 
+function updateData(){
+	//var progress = document.querySelector('progress');
+	var indicator = $('.circle-fill'); //$('#displayGauge');
+	var refresh = $('#refresh');
+	var divGauge = $('#content-gauge');
+	var compName = $('.comp-name');
+	
+	if(secondsLeft <= 1){
+		indicator.removeClass('zoomOut');
+		indicator.addClass('zoomIn');
+
+		//divGauge.addClass('gauge-slide-right');
+		//compName.addClass('comp-name-to-big');
+
+		refresh.removeClass('zoomIn');
+		refresh.addClass('zoomOut');
+		refresh.attr('disabled', true);
+	}
+
+	if(secondsLeft == time2Update){
+
+		//getBuses();
+		
+		//gauge.set(0)
+		//progress.value = 0;
+		indicator.removeClass('zoomIn');
+		indicator.addClass('zoomOut');
+
+
+		//divGauge.removeClass('gauge-slide-right');
+		//compName.removeClass('comp-name-to-big');
+
+		
+		refresh.removeClass('zoomOut');
+		refresh.addClass('zoomIn');
+		refresh.removeAttr('disabled');
+	}else{
+		secondsLeft++;
+		
+		//indicator.css("-webkit-transform", "scale("+ (secondsLeft/time2Update) +")");
+
+		gauge.set(secondsLeft*100/time2Update)
+		//progress.value = secondsLeft*100/time2Update;
+	}
+
+	
+	
+}
+
 function getBuses() {
 	
 	var arrV = configArrival;
 	
-	
-	var getBus_API = host + "OperadorServiceRest/veiculosDaLinha/" + arrV.line_sel + "/" + arrV.way_sel;
+	//$('.circle-fill').css("-webkit-transform", "scale("+ (secondsLeft/time2Update) +")");
+	gauge.set(0);
+	secondsLeft = 0;
+
+	//document.querySelector('progress').value = 0;
+	var getBus_API = host + "veiculosDaLinha/" + arrV.line_sel + "/" + arrV.way_sel;
 	$.getJSON(getBus_API, function(json) {
 		var bus = json.veiculos.reverse();
 		bus_store.update(bus);
@@ -209,7 +267,7 @@ function buildList(data){
 			buslist.push(currentBus);
 			//console.log(buslist);
 				if (time === 0) {
-				time = "Now";
+				time = "Chegando";
 				} else if (time == 1) {
 					time = time + " min";
 				} else {
@@ -229,13 +287,12 @@ function buildList(data){
 								'<div class="bus-line">' +
 									'<p class="vehicle-title">' + bus_code + '</p>' +
 									'<img src="img/loc.png" width="10px" height="auto" class="topminus5">' +
-									'<span>Current Location</span>' +
+									'<span>Localização atual</span>' +
 								'</div>' +
 							'</div>');
 
 			$("#bus-list").append(appended);
 			appended.geocoder(bus_lat, bus_lng);
-			$(".update").toggle("show");
 			
 			myScroll.refresh();
 		}
@@ -325,9 +382,7 @@ $("#lines-stop").change(function() {
 	configArrival.stopObj = findAt(configArrival.stopsObj_origin, 'id',  $("#lines-stop option:selected").val())[0];
 });
 
-$(".update").click(function() {
-	getBuses();
-});
+
 
 $("#run-btn").click(function() {
 	$("#lineModal").modal("hide");
@@ -357,8 +412,8 @@ bus_store.on('update', function(store, data){
 });
 
 $(window).resize(function(e){
-	$('#mapView').height(document.body.offsetHeight - 140);
-	$('#frame').height(document.body.offsetHeight - 140);
+	$('#mapView').height(document.body.offsetHeight - 160);
+	$('#frame iframe').height(document.body.offsetHeight - 160);
 });
 
 
@@ -384,7 +439,9 @@ function toggleMenu(){
 function processBackButton(){
 	var modal = $('div[aria-hidden=false]');
 	
-	if(!!(modal.length)){
+	if(!WxSelect.hide){
+		WxSelect.pickerDisplaying.hidePicker();
+	}else if(!!(modal.length)){
 		modal.modal('hide');
 	}else if ($('.page:nth-child(1)').hasClass('hide-page')){
 		pageShow('.page:nth-child(1)');

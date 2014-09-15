@@ -1,0 +1,172 @@
+/*
+ * Mixins e Definições
+ */
+
+@blue: blue;
+@main_background: #DfDfDf;
+
+
+.gradient(@start, @end){
+	background: -moz-linear-gradient(top, @start 0%, @end 100%) !important; /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%,@end)) !important; /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, @start 0%, @end 100%) !important; /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, @start 0%, @end 100%) !important; /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, @start 0%, @end 100%) !important; /* IE10+ */
+	background: linear-gradient(to bottom, @start 0%, @end 100%) !important; /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=@start, endColorstr=@end,GradientType=0 ) !important; /* IE6-9 */
+}
+
+.flex-box(){
+	display: -webkit-box;
+  	display: -moz-box;
+  	display: -ms-flexbox;
+  	display: -webkit-flex;
+  	display: flex;
+}
+
+.flex(@values){
+	-webkit-box-flex: @values;
+	-moz-box-flex:  @values;
+	-webkit-flex:  @values;
+	-ms-flex:  @values;
+	flex:  @values;
+}
+
+.position(@position: absolute, @left: 0, @top: 0, @right: 0, @bottom: 0){
+	position: @position;
+  	top: @top;
+  	bottom: @bottom;
+  	left: @left;
+  	right: @right;
+}
+
+
+
+
+
+
+
+/*
+ * Styling
+ */
+
+
+
+
+
+body {
+  margin: 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: @main_background;
+}
+
+.content {
+	.flex-box;
+  	.position;
+
+  	-webkit-flex-flow: row wrap;
+  	justify-content: center;
+  	align-items: center;
+  	
+}
+
+.main {
+	background: lighten(@main_background, 10%);
+	overflow: hidden;
+	width: 400px;
+	border: #363636 solid 1px;
+	border-radius: 10px;
+
+	& > * {
+		padding: 0 10px;	
+	}
+
+	& header {
+		.gradient(desaturate(lighten(@blue, 15%), 70%), desaturate(darken(@blue, 15%), 70%));
+		& h1 {
+			margin: 0px;
+			padding: 9px;
+			padding-left: 0px;
+			color: #fff;
+			color: #fefefe;
+			text-shadow: #333 0 -1px 0;
+		}
+	}
+
+	& > footer {
+		padding: 10px;
+		text-align: right;
+	}
+
+}
+
+.description {
+	color: darken(@main_background, 30%);
+	text-shadow: lighten(@main_background, 50%) 0 1px 0;
+	font: 12px Tahoma;
+	font-weight: 700;
+}
+
+
+.form {
+	margin: 5px;
+	& form {
+		border-radius: 5px;
+		border: #fefefe inset 1px;
+		overflow: hidden;
+		.flex-box;
+	}
+
+	& label {
+		background: #ECECEC;
+		padding: 10px;
+		border-right: #ccc solid 1px;
+
+	}
+
+	& input[type=text] {
+		padding: 5px;
+		.flex(1);
+		background: transparent;
+		border: 0;
+	}
+}
+
+
+.custom-file-input {
+	visibility: hidden;	
+	display: none;
+	background: transparent;
+	border: 0;
+}
+
+.input-file-button {
+	margin: -1px 0 0 -1px;
+}
+
+.msg {
+	margin: 20px;
+	letter-spacing: 2px;
+	border-radius: 10px;
+	text-align: center;
+	-webkit-transition: all .5s ease-out;
+	-moz-transition: all .8s ease-out;
+	-ms-transition: all .8s ease-out;
+	-o-transition: all .8s ease-out;
+	transition: all .8s ease-out;
+	position: relative;
+	opacity: 1;
+	top: 0;
+}
+
+.success {
+	border: #629445 solid 1px;
+	color: green;
+	background: rgba(0, 128, 0, 0.35);
+}
+
+.error {
+	border: #944545 solid 1px;
+	color: #fff;
+	background: rgba(128, 0, 0, 0.35);
+}
